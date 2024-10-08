@@ -26,8 +26,10 @@ class Encadenamiento:
         self.__dim = self.Primo(dim)
         self.__tabla = np.full(self.__dim, None, dtype = object)
         self.__hash = Hash()
-        self.__exito = 0
-        self.__colisiones = 0
+        self.__comp_min_exito = 9999
+        self.__comp_max_exito = 0   
+        self.__comp_min_fracaso = 9999
+        self.__comp_max_fracaso = 0 
                 
     def Primo(self, x):
         i = 2
@@ -39,39 +41,36 @@ class Encadenamiento:
             return self.Primo(x + 1)
     
     def Insertar(self, clave):
-        pasadas = 0
-        pos = self.__hash.Division(clave, self.__dim)
+        pos = self.__hash.Plegado(clave, 3, self.__dim)
+        pos = self.__hash.Extraccion(pos, 1)
         pos = self.__hash.Division(pos, self.__dim)
         aux = self.__tabla[pos]
         while (aux != None) and (aux.getSig() != None):
             aux = aux.getSig()
-            pasadas += 1
-            self.__colisiones += 1
         if (aux == None):
             self.__tabla[pos] = Nodo(clave)
         else:
-            pasadas += 1
-            self.__colisiones += 1
             aux.setSig(Nodo(clave))
-        if (pasadas == 0):
-            self.__exito += 1
-        print(f"Se insertó la clave {clave} tras {pasadas} colisiones")
     
     def Buscar(self, clave):
-        pos = self.__hash.Division(clave, self.__dim)
+        comparaciones = 1
+        pos = self.__hash.Plegado(clave, 3, self.__dim)
+        pos = self.__hash.Extraccion(pos, 1)
         pos = self.__hash.Division(pos, self.__dim)
         aux = self.__tabla[pos]
-        lugar = 0
         while (aux != None) and (aux.getDato() != clave):
             aux = aux.getSig()
-            lugar += 1
+            comparaciones += 1
         if (aux != None):
             if (aux.getDato() == clave):
-                print(f"Se encontró la clave {clave} en la posición {pos}, lugar {lugar}")
+                self.__comp_max_exito = max(self.__comp_max_exito, comparaciones)
+                self.__comp_min_exito = min(self.__comp_min_exito, comparaciones)
             else:
-                print(f"La clave {clave} no se encontró")
+                self.__comp_max_fracaso = max(self.__comp_max_fracaso, comparaciones)
+                self.__comp_min_fracaso = min(self.__comp_min_fracaso, comparaciones)
         else:
-            print(f"La clave {clave} no se encontró")
+            self.__comp_max_fracaso = max(self.__comp_max_fracaso, comparaciones)
+            self.__comp_min_fracaso = min(self.__comp_min_fracaso, comparaciones)
     
     def Mostrar(self):
         for i in range(self.__dim):
@@ -81,5 +80,8 @@ class Encadenamiento:
                 print(f"{aux.getDato()}")
                 aux = aux.getSig()
     
-    def Datos(self):
-        print(f"se insertaron: {self.__exito} claves a la primera, hubo {self.__colisiones} colisiones")
+    def Ej2(self):
+        print(f"Comparaciones máximas en búsqueda exitosa: {self.__comp_max_exito}") 
+        print(f"Comparaciones mínimas en búsqueda exitosa: {self.__comp_min_exito}")  
+        print(f"Comparaciones máximas en búsqueda no exitosa: {self.__comp_max_fracaso}")  
+        print(f"Comparaciones mínimas en búsqueda no exitosa: {self.__comp_min_fracaso}")

@@ -1,7 +1,7 @@
 class Hash:
                   
     def Division(self, clave, dim):
-        retorna = clave % dim
+        retorna = int(clave % dim)
         return retorna
     
     def Extraccion(self, clave, n):

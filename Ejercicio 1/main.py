@@ -5,16 +5,16 @@ from Buckets import *
 
 
 if __name__ == '__main__':
-    tabla_D = Dir_Ab(5)
-    tabla_E = Encadenamiento(5)
-    tabla_B = Buckets(20)
+    tabla_D = Dir_Ab(20)
+    tabla_E = Encadenamiento(10)
+    tabla_B = Buckets(10)
     '''claves = []
-    for i in range(20):
+    for i in range(10):
         clave = random.randint(100, 999)
-        tabla_E.Insertar(clave)
+        tabla_B.Insertar(clave)
         claves.append(clave)
-    tabla_E.Datos()
-    tabla_E.Mostrar()'''
+    tabla_B.Datos()
+    tabla_B.Mostrar()'''
     '''tabla_E.Insertar("E021")
     tabla_E.Insertar("A475")
     tabla_E.Insertar("a037")
@@ -22,8 +22,8 @@ if __name__ == '__main__':
     tabla_E.Insertar("Q789")
     tabla_E.Datos()
     tabla_E.Buscar("E021")
-    tabla_B.Mostrar()'''
-    tabla_B.Insertar(265)
+    tabla_E.Mostrar()'''
+    '''tabla_B.Insertar(265)
     tabla_B.Insertar(325)
     tabla_B.Insertar(573)
     tabla_B.Insertar(261)
@@ -37,4 +37,4 @@ if __name__ == '__main__':
     tabla_B.Buscar(198)
     tabla_B.Buscar(285)
     tabla_B.Datos()
-    tabla_B.Mostrar()
+    tabla_B.Mostrar()'''

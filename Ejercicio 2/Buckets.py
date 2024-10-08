@@ -1,6 +1,6 @@
 import numpy as np
-import math
 from Hash import *
+import math
 
 class Buckets:
     def __init__(self, m):
@@ -11,8 +11,10 @@ class Buckets:
         self.__tabla = np.full((self.__filas, self.__buckets), None, dtype = object)
         self.__overflow = int(self.__filas / 1.2)
         self.__hash = Hash()
-        self.__exito = 0
-        self.__colisiones = 0
+        self.__comp_min_exito = 9999
+        self.__comp_max_exito = 0   
+        self.__comp_min_fracaso = 9999
+        self.__comp_max_fracaso = 0 
     
     def Primo(self, x):
         i = 2
@@ -24,25 +26,18 @@ class Buckets:
             return self.Primo(x + 1)
     
     def Insertar(self, clave):
-        pos = self.__hash.Extraccion(clave, 2)
-        pos = self.__hash.Plegado(pos, 1, self.__filas)
-        pasadas = 0
+        pos = self.__hash.Plegado(clave, 3, self.__filas)
+        pos = self.__hash.Extraccion(pos, 1)
+        pos = self.__hash.Division(pos, self.__filas)
         if (self.__sinonimas[pos] < self.__buckets):
             self.__tabla[pos, self.__sinonimas[pos]] = clave
-            self.__colisiones += self.__sinonimas[pos]
-            pasadas = self.__sinonimas[pos]
             self.__sinonimas[pos] += 1
-            print(f"Se insertó la clave {clave} tras {pasadas} colisiones")
-            if (pasadas == 0):
-                self.__exito += 1
         else:
             i = self.__overflow
             j = 0
             exito = False
             while (i < self.__filas):
                 while (j < self.__buckets):
-                    self.__colisiones += 1
-                    pasadas += 1
                     if (self.__tabla[i, j] == None):
                         self.__tabla[i, j] = clave
                         self.__sinonimas[pos] += 1
@@ -53,20 +48,20 @@ class Buckets:
                         j += 1
                 i += 1
                 j = 0
-            if (exito == True):
-                print(f"Se insertó la clave {clave}, en la zona de overflow tras {pasadas} colisiones")  
-            else:
-                print(f"La clave {clave} no se insertó")    
-                  
-                  
+                    
+
     def Buscar(self, clave):
-        pos = self.__hash.Division(clave, self.__filas)
+        comparaciones = 1
+        pos = self.__hash.Plegado(clave, 3, self.__filas)
+        pos = self.__hash.Extraccion(pos, 1)
         pos = self.__hash.Division(pos, self.__filas)
         j = 0
         while (j < self.__buckets) and (self.__tabla[pos, j] != clave):
+            comparaciones += 1
             j += 1
         if (j < self.__buckets):
-            print(f"Se encontró la clave {clave} en la fila {pos}, columna {j}")
+            self.__comp_max_exito = max(self.__comp_max_exito, comparaciones)
+            self.__comp_min_exito = min(self.__comp_min_exito, comparaciones)
         else:
             if (self.__sinonimas[pos] > self.__buckets):
                 i = self.__overflow
@@ -74,7 +69,10 @@ class Buckets:
                 exito = False
                 while (i < self.__filas):
                     while (j < self.__buckets):
+                        comparaciones += 1
                         if (self.__tabla[i, j] == clave):
+                            self.__comp_max_exito = max(self.__comp_max_exito, comparaciones)
+                            self.__comp_min_exito = min(self.__comp_min_exito, comparaciones)
                             exito = True
                             j = self.__buckets
                             i = self.__filas
@@ -83,14 +81,14 @@ class Buckets:
                     i += 1
                     j = 0
                 if (exito == True):
-                    print(f"Se encontró la clave {clave} en la zona de overflow, fila {i}, columna {j}")
+                    self.__comp_max_exito = max(self.__comp_max_exito, comparaciones)
+                    self.__comp_min_exito = min(self.__comp_min_exito, comparaciones)
                 else:
-                    print(f"La clave {clave} no se encontró")
+                    self.__comp_max_fracaso = max(self.__comp_max_fracaso, comparaciones)
+                    self.__comp_min_fracaso = min(self.__comp_min_fracaso, comparaciones)
             else:
-                print(f"La clave {clave} no se encontró")
-    
-    def Datos(self):
-        print(f"se insertaron: {self.__exito} claves a la primera, hubo {self.__colisiones} colisiones")
+                self.__comp_max_fracaso = max(self.__comp_max_fracaso, comparaciones)
+                self.__comp_min_fracaso = min(self.__comp_min_fracaso, comparaciones)
     
     def Mostrar(self):
         for i in range (self.__filas):
@@ -99,3 +97,9 @@ class Buckets:
             print(f"Fila {i}:")
             for j in range (self.__buckets):
                 print(f"Columna {j}: {self.__tabla[i, j]}")
+    
+    def Ej2(self):
+        print(f"Comparaciones máximas en búsqueda exitosa: {self.__comp_max_exito}") 
+        print(f"Comparaciones mínimas en búsqueda exitosa: {self.__comp_min_exito}")  
+        print(f"Comparaciones máximas en búsqueda no exitosa: {self.__comp_max_fracaso}")  
+        print(f"Comparaciones mínimas en búsqueda no exitosa: {self.__comp_min_fracaso}")

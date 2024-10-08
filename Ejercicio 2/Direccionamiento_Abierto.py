@@ -8,11 +8,9 @@ class Dir_Ab:
         self.__dim = self.Primo(self.__dim)       
         self.__tabla = np.full(self.__dim, None, dtype = object)
         self.__hash = Hash()
-        self.__exito = 0
-        self.__colisiones = 0
-        self.__comp_min_exito = 0
+        self.__comp_min_exito = 9999
         self.__comp_max_exito = 0   
-        self.__comp_min_fracaso = 0
+        self.__comp_min_fracaso = 9999
         self.__comp_max_fracaso = 0  
     
     def Primo(self, x):
@@ -26,41 +24,45 @@ class Dir_Ab:
 
     
     def Insertar(self, clave):
-        pasadas = 0
-        pos = self.__hash.Alfanumerico(clave, self.__dim)
+        pos = self.__hash.Plegado(clave, 3, self.__dim)
+        pos = self.__hash.Extraccion(pos, 1)
+        pos = self.__hash.Division(pos, self.__dim)
         if (self.__tabla[pos] == None):
             self.__tabla[pos] = clave
-            self.__exito += 1
         else:
             nuevo = (pos + 1) % self.__dim
-            self.__colisiones += 1
-            vueltas += 1
             while (nuevo != pos) and (self.__tabla[nuevo] != None):
                 nuevo = (nuevo + 1) % self.__dim
-                self.__colisiones += 1
-                pasadas += 1
             if (nuevo != pos):
                 self.__tabla[nuevo] = clave
-            else:
-                print("No se pudo insertar la clave")
-        print(f"en la insersion, la clave {clave} colisionó {pasadas} veces")
     
     def Buscar(self, clave):
-        pos = self.__hash.Alfanumerico(clave, self.__dim)
+        comparaciones = 1
+        pos = self.__hash.Plegado(clave, 3, self.__dim)
+        pos = self.__hash.Extraccion(pos, 1)
+        pos = self.__hash.Division(pos, self.__dim)
         if (self.__tabla[pos] == clave):
-            print(f"clave {clave} encontrada en la psoición {pos}")
+            self.__comp_max_exito = max(self.__comp_max_exito, comparaciones)
+            self.__comp_min_exito = min(self.__comp_min_exito, comparaciones)
         else:
             nuevo = (pos + 1) % self.__dim
+            comparaciones += 1
             while (nuevo != pos) and (self.__tabla[nuevo] != clave):
                 nuevo = (nuevo + 1) % self.__dim
+                comparaciones += 1
             if (nuevo != pos):
-                print(f"clave {clave} encontrada en la psoición {nuevo}")
+                self.__comp_max_exito = max(self.__comp_max_exito, comparaciones)
+                self.__comp_min_exito = min(self.__comp_min_exito, comparaciones)
             else:
-                print(f"clave {clave} no encontrada")
+                self.__comp_max_fracaso = max(self.__comp_max_fracaso, comparaciones)
+                self.__comp_min_fracaso = min(self.__comp_min_fracaso, comparaciones)
     
     def Mostrar(self):
         for i in range(self.__dim):
             print(f"posicion {i}: {self.__tabla[i]}")
     
-    def Datos(self):
-        print(f"se insertaron: {self.__exito} claves a la primera, hubo {self.__colisiones} colisiones")         
+    def Ej2(self):
+        print(f"Comparaciones máximas en búsqueda exitosa: {self.__comp_max_exito}") 
+        print(f"Comparaciones mínimas en búsqueda exitosa: {self.__comp_min_exito}")  
+        print(f"Comparaciones máximas en búsqueda no exitosa: {self.__comp_max_fracaso}")  
+        print(f"Comparaciones mínimas en búsqueda no exitosa: {self.__comp_min_fracaso}")            
