@@ -24,8 +24,8 @@ class Buckets:
             return self.Primo(x + 1)
     
     def Insertar(self, clave):
-        pos = self.__hash.Extraccion(clave, 2)
-        pos = self.__hash.Plegado(pos, 1, self.__filas)
+        pos = self.__hash.Plegado(clave, 2, self.__filas)
+        pos = self.__hash.Extraccion(pos, 1)
         pasadas = 0
         if (self.__sinonimas[pos] < self.__buckets):
             self.__tabla[pos, self.__sinonimas[pos]] = clave
@@ -60,8 +60,8 @@ class Buckets:
                   
                   
     def Buscar(self, clave):
-        pos = self.__hash.Extraccion(clave, 2)
-        pos = self.__hash.Plegado(pos, 1, self.__filas)
+        pos = self.__hash.Plegado(clave, 2, self.__filas)
+        pos = self.__hash.Extraccion(pos, 1)
         j = 0
         while (j < self.__buckets) and (self.__tabla[pos, j] != clave):
             j += 1
