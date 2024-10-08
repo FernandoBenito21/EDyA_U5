@@ -60,8 +60,8 @@ class Buckets:
                   
                   
     def Buscar(self, clave):
-        pos = self.__hash.Division(clave, self.__filas)
-        pos = self.__hash.Division(pos, self.__filas)
+        pos = self.__hash.Extraccion(clave, 2)
+        pos = self.__hash.Plegado(pos, 1, self.__filas)
         j = 0
         while (j < self.__buckets) and (self.__tabla[pos, j] != clave):
             j += 1
