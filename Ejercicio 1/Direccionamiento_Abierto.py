@@ -9,11 +9,7 @@ class Dir_Ab:
         self.__tabla = np.full(self.__dim, None, dtype = object)
         self.__hash = Hash()
         self.__exito = 0
-        self.__colisiones = 0
-        self.__comp_min_exito = 0
-        self.__comp_max_exito = 0   
-        self.__comp_min_fracaso = 0
-        self.__comp_max_fracaso = 0  
+        self.__colisiones_totales = 0
     
     def Primo(self, x):
         i = 2
@@ -26,24 +22,23 @@ class Dir_Ab:
 
     
     def Insertar(self, clave):
-        pasadas = 0
+        colisiones = 0
         pos = self.__hash.Alfanumerico(clave, self.__dim)
         if (self.__tabla[pos] == None):
             self.__tabla[pos] = clave
             self.__exito += 1
         else:
             nuevo = (pos + 1) % self.__dim
-            self.__colisiones += 1
-            vueltas += 1
+            colisiones += 1
             while (nuevo != pos) and (self.__tabla[nuevo] != None):
                 nuevo = (nuevo + 1) % self.__dim
-                self.__colisiones += 1
-                pasadas += 1
+                colisiones += 1
             if (nuevo != pos):
                 self.__tabla[nuevo] = clave
             else:
                 print("No se pudo insertar la clave")
-        print(f"en la insersion, la clave {clave} colisionó {pasadas} veces")
+        self.__colisiones_totales += colisiones
+        print(f"en la insersion, la clave {clave} colisionó {colisiones} veces")
     
     def Buscar(self, clave):
         pos = self.__hash.Alfanumerico(clave, self.__dim)
@@ -63,4 +58,4 @@ class Dir_Ab:
             print(f"posicion {i}: {self.__tabla[i]}")
     
     def Datos(self):
-        print(f"se insertaron: {self.__exito} claves a la primera, hubo {self.__colisiones} colisiones")         
+        print(f"se insertaron: {self.__exito} claves a la primera, hubo {self.__colisiones_totales} colisiones")         

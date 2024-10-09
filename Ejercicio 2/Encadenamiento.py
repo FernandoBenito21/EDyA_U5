@@ -41,8 +41,7 @@ class Encadenamiento:
             return self.Primo(x + 1)
     
     def Insertar(self, clave):
-        pos = self.__hash.Plegado(clave, 3, self.__dim)
-        pos = self.__hash.Extraccion(pos, 1)
+        pos = self.__hash.Division(clave, self.__dim)
         pos = self.__hash.Division(pos, self.__dim)
         aux = self.__tabla[pos]
         while (aux != None) and (aux.getSig() != None):
@@ -54,8 +53,7 @@ class Encadenamiento:
     
     def Buscar(self, clave):
         comparaciones = 1
-        pos = self.__hash.Plegado(clave, 3, self.__dim)
-        pos = self.__hash.Extraccion(pos, 1)
+        pos = self.__hash.Division(clave, self.__dim)
         pos = self.__hash.Division(pos, self.__dim)
         aux = self.__tabla[pos]
         while (aux != None) and (aux.getDato() != clave):

@@ -27,7 +27,7 @@ class Encadenamiento:
         self.__tabla = np.full(self.__dim, None, dtype = object)
         self.__hash = Hash()
         self.__exito = 0
-        self.__colisiones = 0
+        self.__colisiones_totales = 0
                 
     def Primo(self, x):
         i = 2
@@ -39,23 +39,22 @@ class Encadenamiento:
             return self.Primo(x + 1)
     
     def Insertar(self, clave):
-        pasadas = 0
+        colisiones = 0
         pos = self.__hash.Division(clave, self.__dim)
         pos = self.__hash.Division(pos, self.__dim)
         aux = self.__tabla[pos]
         while (aux != None) and (aux.getSig() != None):
             aux = aux.getSig()
-            pasadas += 1
-            self.__colisiones += 1
+            colisiones += 1
         if (aux == None):
             self.__tabla[pos] = Nodo(clave)
         else:
-            pasadas += 1
-            self.__colisiones += 1
+            colisiones += 1
             aux.setSig(Nodo(clave))
-        if (pasadas == 0):
+        if (colisiones == 0):
             self.__exito += 1
-        print(f"Se insertó la clave {clave} tras {pasadas} colisiones")
+        self.__colisiones_totales += colisiones
+        print(f"Se insertó la clave {clave} tras {colisiones} colisiones")
     
     def Buscar(self, clave):
         pos = self.__hash.Division(clave, self.__dim)
@@ -82,4 +81,4 @@ class Encadenamiento:
                 aux = aux.getSig()
     
     def Datos(self):
-        print(f"se insertaron: {self.__exito} claves a la primera, hubo {self.__colisiones} colisiones")
+        print(f"se insertaron: {self.__exito} claves a la primera, hubo {self.__colisiones_totales} colisiones")

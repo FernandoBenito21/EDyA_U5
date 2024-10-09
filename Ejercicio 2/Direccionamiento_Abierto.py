@@ -24,8 +24,7 @@ class Dir_Ab:
 
     
     def Insertar(self, clave):
-        pos = self.__hash.Plegado(clave, 3, self.__dim)
-        pos = self.__hash.Extraccion(pos, 1)
+        pos = self.__hash.Division(clave, self.__dim)
         pos = self.__hash.Division(pos, self.__dim)
         if (self.__tabla[pos] == None):
             self.__tabla[pos] = clave
@@ -38,8 +37,7 @@ class Dir_Ab:
     
     def Buscar(self, clave):
         comparaciones = 1
-        pos = self.__hash.Plegado(clave, 3, self.__dim)
-        pos = self.__hash.Extraccion(pos, 1)
+        pos = self.__hash.Division(clave, self.__dim)
         pos = self.__hash.Division(pos, self.__dim)
         if (self.__tabla[pos] == clave):
             self.__comp_max_exito = max(self.__comp_max_exito, comparaciones)
