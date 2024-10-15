@@ -13,7 +13,6 @@ class Buckets:
         self.__hash = Hash()
         self.__exito = 0
         self.__colisiones_totales = 0
-        print (f"primaria: {self.__primaria}, overflow: {self.__overflow}, totales: {self.__filas}")
     
     def Primo(self, x):
         i = 2
