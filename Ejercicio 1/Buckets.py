@@ -69,16 +69,12 @@ class Buckets:
                 i = self.__overflow
                 j = 0
                 encontrado = False
-                fin = False
-                while (i < self.__filas) and (encontrado == False) and (fin == False):
-                    while (j < self.__buckets) and (encontrado == False) and (fin == False):
-                        if (self.__tabla[i, j] == None):
-                            fin = True
+                while (i < self.__filas) and (self.__tabla[i, j] != None) and (encontrado == False):
+                    while (j < self.__buckets) and (self.__tabla[i, j] != None) and (encontrado == False):
+                        if (self.__tabla[i, j] == clave):
+                            encontrado = True
                         else:
-                            if (self.__tabla[i, j] == clave):
-                                encontrado = True
-                            else:
-                                j += 1
+                            j += 1
                     i += 1
                     j = 0
                 if (encontrado == True):
