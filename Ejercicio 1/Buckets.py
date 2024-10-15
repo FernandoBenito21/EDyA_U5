@@ -5,14 +5,15 @@ from Hash import *
 class Buckets:
     def __init__(self, m):
         self.__buckets = 4
-        self.__filas = self.Primo(math.ceil((m / self.__buckets)))
-        self.__sinonimas = np.full(int(self.__filas), 0, dtype = int)
-        self.__filas = int(self.__filas * 1.2)
+        self.__primaria = self.Primo(math.ceil((m / self.__buckets)))
+        self.__filas = math.ceil(self.__primaria * 1.2)
         self.__tabla = np.full((self.__filas, self.__buckets), None, dtype = object)
-        self.__overflow = int(self.__filas / 1.2)
+        self.__sinonimas = np.full(self.__primaria, 0, dtype = int)
+        self.__overflow = self.__primaria
         self.__hash = Hash()
         self.__exito = 0
         self.__colisiones_totales = 0
+        print (f"primaria: {self.__primaria}, overflow: {self.__overflow}, totales: {self.__filas}")
     
     def Primo(self, x):
         i = 2
@@ -24,8 +25,8 @@ class Buckets:
             return self.Primo(x + 1)
     
     def Insertar(self, clave):
-        pos = self.__hash.Division(clave, (self.__filas * self.__buckets))
-        pos = self.__hash.Division(pos, (self.__filas * self.__buckets))
+        pos = self.__hash.Division(clave, (self.__primaria))
+        pos = self.__hash.Division(pos, (self.__primaria))
         colisiones = 0
         if (self.__sinonimas[pos] < self.__buckets):
             self.__tabla[pos, self.__sinonimas[pos]] = clave
@@ -57,8 +58,8 @@ class Buckets:
                   
                   
     def Buscar(self, clave):
-        pos = self.__hash.Division(clave, (self.__filas * self.__buckets))
-        pos = self.__hash.Division(pos, (self.__filas * self.__buckets))
+        pos = self.__hash.Division(clave, (self.__primaria))
+        pos = self.__hash.Division(pos, (self.__primaria))
         j = 0
         while (j < self.__buckets) and (self.__tabla[pos, j] != clave):
             j += 1
@@ -69,14 +70,16 @@ class Buckets:
                 i = self.__overflow
                 j = 0
                 encontrado = False
-                while (i < self.__filas) and (encontrado == False):
-                    while (j < self.__buckets) and (encontrado == False):
-                        if (self.__tabla[i, j] == clave):
-                            encontrado = True
-                            j = self.__buckets
-                            i = self.__filas
+                fin = False
+                while (i < self.__filas) and (encontrado == False) and (fin == False):
+                    while (j < self.__buckets) and (encontrado == False) and (fin == False):
+                        if (self.__tabla[i, j] == None):
+                            fin = True
                         else:
-                            j += 1
+                            if (self.__tabla[i, j] == clave):
+                                encontrado = True
+                            else:
+                                j += 1
                     i += 1
                     j = 0
                 if (encontrado == True):

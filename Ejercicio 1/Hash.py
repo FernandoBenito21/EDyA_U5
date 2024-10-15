@@ -1,6 +1,7 @@
 class Hash:
                   
     def Division(self, clave, dim):
+        clave = int(clave)
         retorna = clave % dim
         return retorna
     

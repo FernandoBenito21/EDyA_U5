@@ -1,7 +1,8 @@
 class Hash:
                   
     def Division(self, clave, dim):
-        retorna = int(clave % dim)
+        clave = int(clave)
+        retorna = clave % dim
         return retorna
     
     def Extraccion(self, clave, n):
@@ -25,7 +26,7 @@ class Hash:
         cuadrado_str = str(cuadrado)
         medio = len(cuadrado_str) // 2
         if len(cuadrado_str) % 2 == 0:
-            extraido = cuadrado_str[medio-1 : medio+1]
+            extraido = cuadrado_str[medio - 1 : medio + 1]
         else:
             extraido = cuadrado_str[medio]
         retorna = int(extraido) % dim
